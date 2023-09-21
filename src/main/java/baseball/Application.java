@@ -6,6 +6,7 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Application {
 
@@ -60,7 +61,7 @@ public class Application {
         return number_sb;
     }
 
-    // 볼과 스트라이크의 결과에 따른 구문 출력하는 기능
+    // 볼과 스트라이크의 결과에 따른 구문을 출력하는 기능
     public String validationSB(List<Integer> number_sb) {
         String validation_result = "";
 
@@ -85,7 +86,22 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        Application A = new Application();
+
+        A.startGame(); // 게임 시작
+        List<Integer> number_sb = new ArrayList<>(Arrays.asList(0, 0));
+        List<Integer> computer_answer = A.selectAnswer(); // 컴퓨터가 생각하는 숫자 3자리
+
+        while (true) {
+            String input_number = A.inputNumber();// 입력 받기
+            number_sb = A.checkSB(input_number, computer_answer); // 입력 받은 숫자 스트라이크 볼 검증
+            String validation_result = A.validationSB(number_sb);
+
+            if (Objects.equals(validation_result, "2")) break; // 숫자를 모두 맞히고 게임 종료
+            else if (Objects.equals(validation_result, "1")) {
+                computer_answer = A.selectAnswer(); // 컴퓨터가 생각하는 숫자 3자리(갱신)
+            }
+        }
     }
 
      /* 필요한 기능(역할)
@@ -93,7 +109,8 @@ public class Application {
     2. 숫자를 입력하는 기능(문자 길이에 따른 예외처리 필요)
     3. 컴퓨터가 생각하는 숫자 3자리 무작위 선정 기능
     4. 볼과 스트라이크의 유무를 확인하는 기능
-    5. 볼과 스트라이크의 결과에 따른 구문 출력하는 기능
+    5. 볼과 스트라이크의 결과에 따른 구문을 출력하는 기능
+    6. main문 작성
     */
 
 }
