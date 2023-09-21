@@ -60,6 +60,30 @@ public class Application {
         return number_sb;
     }
 
+    // 볼과 스트라이크의 결과에 따른 구문 출력하는 기능
+    public String validationSB(List<Integer> number_sb) {
+        String validation_result = "";
+
+        if (number_sb.get(0) == 3) {
+            System.out.println(number_sb.get(0) + "스트라이크");
+            System.out.println("3개의 숫자를 모두 맞히셨습니다! 게임 종료");
+            System.out.println("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
+            validation_result = Console.readLine();
+        } else {
+            if (number_sb.get(0) == 0 && number_sb.get(1) != 0) { // 볼만 있는 경우
+                System.out.println(number_sb.get(1) + "볼");
+            } else if(number_sb.get(0) != 0 && number_sb.get(1) == 0) { // 스트라이크만 있는 경우
+                System.out.println(number_sb.get(0) + "스트라이크");
+            } else if(number_sb.get(0) == 0 && number_sb.get(1) == 0) { // 하나도 없는 경우
+                System.out.println("낫싱");
+            } else { // 스트라이크 볼 둘다 있는 경우
+                System.out.println(number_sb.get(1) + "볼 " + number_sb.get(0) + "스트라이크");
+            }
+            validation_result = "계속 진행";
+        }
+        return validation_result;
+    }
+
     public static void main(String[] args) {
         // TODO: 프로그램 구현
     }
