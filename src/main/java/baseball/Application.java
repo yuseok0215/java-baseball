@@ -4,6 +4,7 @@ import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Application {
@@ -36,6 +37,27 @@ public class Application {
             }
         }
         return computer;
+    }
+
+    // 볼과 스트라이크의 유무를 확인하는 기능
+    public List<Integer> checkSB(String input_number, List<Integer> computer_answer) {
+
+        List<Integer> number_sb = new ArrayList<>(Arrays.asList(0, 0));
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int c = Character.getNumericValue(input_number.charAt(j));
+
+                if (computer_answer.get(i) == c) { // 일단 동일한 숫자가 존재(스트라이크인지 볼인지는 모르는 상태)
+                    if (i == j) { // 스트라이크
+                        number_sb.set(0, number_sb.get(0) + 1);
+                    } else { // 볼
+                        number_sb.set(1, number_sb.get(1) + 1);
+                    }
+                }
+            }
+        }
+        return number_sb;
     }
 
     public static void main(String[] args) {
