@@ -18,7 +18,7 @@ public class GameController {
     public void run() {
         OutputView.startGame(); // 게임 시작을 알리는 기능
         Game game = new Game(); // 게임 객체 하나 생성
-        game.resetSB(); // 볼, 스트라이크 0으로 초기화
+//        game.resetSB(); // 볼, 스트라이크 0으로 초기화
         List<Integer> answer_score = selectAnswer(); // 정답 숫자 만들기
 
         while (true) {
@@ -51,17 +51,22 @@ public class GameController {
 
         List<Integer> number_sb = new ArrayList<>(Arrays.asList(0, 0));
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 int input_num = Character.getNumericValue(input_number.charAt(j));
+                 number_sb = updateSB(computer_answer, number_sb, input_num, j, i);
+            }
+        }
+        return number_sb;
+    }
 
-                if (computer_answer.get(i) == input_num) { // 일단 동일한 숫자가 존재(스트라이크인지 볼인지는 모르는 상태)
-                    if (i == j) { // 스트라이크
-                        number_sb.set(0, number_sb.get(0) + 1);
-                    } else { // 볼
-                        number_sb.set(1, number_sb.get(1) + 1);
-                    }
-                }
+    // 스트라이크, 볼을 판독하는 기능
+    public List<Integer> updateSB(List<Integer> computer_answer, List<Integer> number_sb, int input_num, int input_index, int answer_index) {
+        if (computer_answer.get(answer_index) == input_num) { // 일단 동일한 숫자가 존재(스트라이크인지 볼인지는 모르는 상태)
+            if (input_index == answer_index) { // 스트라이크
+                number_sb.set(0, number_sb.get(0) + 1);
+            } else { // 볼
+                number_sb.set(1, number_sb.get(1) + 1);
             }
         }
         return number_sb;
