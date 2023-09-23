@@ -1,6 +1,7 @@
 package baseball.controller;
 
 import baseball.model.Game;
+import baseball.model.User;
 import baseball.view.InputView;
 import baseball.view.OutputView;
 import camp.nextstep.edu.missionutils.Randoms;
@@ -23,15 +24,18 @@ public class GameController {
     final int START_NUMBER = 1;
     final int END_NUMBER = 9;
 
+    Game game;
+    User user = new User();
+
     public void run() {
         OutputView.startGame(); // 게임 시작을 알리는 기능
 //        List<Integer> answer_score = makeGameAnswer(SIZE, START_NUMBER, END_NUMBER); // 정답 숫자 만들기
 
-        Game game = new Game(makeGameAnswer(SIZE, START_NUMBER, END_NUMBER)); // 새로운 게임 생성(3자리를 만들면서)
+        game = new Game(makeGameAnswer(SIZE, START_NUMBER, END_NUMBER)); // 새로운 게임 생성(3자리를 만들면서)
 
         while (true) {
-            String input_number = InputView.inputNumber();
-            List<Integer> number_sb = checkSB(input_number, game.getGame_answer());
+            user.setUser_number(convertInput(InputView.inputNumber()));
+            List<Integer> number_sb = checkSB(user.getUser_number(), game.getGame_answer());
             String validation_result = validationSB(number_sb);
 
             if (Objects.equals(validation_result, "2")) break;
@@ -55,14 +59,13 @@ public class GameController {
     }
 
     // 볼과 스트라이크의 유무를 확인하는 기능
-    public List<Integer> checkSB(String input_number, List<Integer> computer_answer) {
+    public List<Integer> checkSB(List<Integer> user_number, List<Integer> computer_answer) {
 
         List<Integer> number_sb = new ArrayList<>(Arrays.asList(0, 0));
 
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                int input_num = Character.getNumericValue(input_number.charAt(j));
-                number_sb = updateSB(computer_answer, number_sb, input_num, j, i);
+        for (int i = 0; i < SIZE; i++) { // 컴퓨터 정답 숫자 3자리
+            for (int j = 0; j < SIZE; j++) { // 유저 숫자 3자리
+                number_sb = updateSB(computer_answer, number_sb, user_number.get(j), j, i);
             }
         }
         return number_sb;
@@ -90,6 +93,18 @@ public class GameController {
             OutputView.checkBallAndStrike(number_sb);
         }
         return validation_result;
+    }
+
+    // String타입으로 입력받은 문자열을 List<Integer>타입으로 변환하는 기능
+    public List<Integer> convertInput(String user_number) {
+        List<Integer> converted_user_number = new ArrayList<>();
+
+        for (int i = 0; i < user_number.length(); i++) {
+            int int_number = Character.getNumericValue(user_number.charAt(i));
+            converted_user_number.add(int_number);
+        }
+
+        return converted_user_number;
     }
 
 
