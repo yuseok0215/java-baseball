@@ -33,6 +33,14 @@ public class Game {
         this.ball_count = ball_count;
     }
 
+    public void plusStrike_count() {
+        this.strike_count += 1;
+    }
+
+    public void plusBall_count() {
+        this.ball_count += 1;
+    }
+
     public List<Integer> getGame_answer() {
         return game_answer;
     }

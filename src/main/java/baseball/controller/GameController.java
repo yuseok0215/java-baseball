@@ -4,6 +4,7 @@ import baseball.model.Game;
 import baseball.model.User;
 import baseball.view.InputView;
 import baseball.view.OutputView;
+import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class GameController {
 
         while (true) {
             user.setUser_number(convertInput(InputView.inputNumber()));
-            List<Integer> number_sb = checkSB(user.getUser_number(), game.getGame_answer());
-            String validation_result = validationSB(number_sb);
+            updateSB(user, game);
+            String validation_result = validationSB(game);
 
             if (Objects.equals(validation_result, "2")) break;
             else if (Objects.equals(validation_result, "1")) {
@@ -58,39 +59,59 @@ public class GameController {
         return game_answer;
     }
 
-    // 볼과 스트라이크의 유무를 확인하는 기능
-    public List<Integer> checkSB(List<Integer> user_number, List<Integer> computer_answer) {
-
-        List<Integer> number_sb = new ArrayList<>(Arrays.asList(0, 0));
-
-        for (int i = 0; i < SIZE; i++) { // 컴퓨터 정답 숫자 3자리
-            for (int j = 0; j < SIZE; j++) { // 유저 숫자 3자리
-                number_sb = updateSB(computer_answer, number_sb, user_number.get(j), j, i);
-            }
+    // 볼과 스트라이크을 업데이트 하는 기능
+    public void updateSB(User user, Game game) {
+        game.resetSB();
+        if (checkSB(user, game)) { // 일치하는 숫자가 하나라도 있는 경우
+            countSB(user, game);
         }
-        return number_sb;
     }
 
-    // 스트라이크, 볼을 판독하는 기능
-    public List<Integer> updateSB(List<Integer> computer_answer, List<Integer> number_sb, int input_num, int input_index, int answer_index) {
-        if (computer_answer.get(answer_index) == input_num) { // 일단 동일한 숫자가 존재(스트라이크인지 볼인지는 모르는 상태)
-            if (input_index == answer_index) { // 스트라이크
-                number_sb.set(0, number_sb.get(0) + 1);
-            } else { // 볼
-                number_sb.set(1, number_sb.get(1) + 1);
+    // 결과값이 낫싱인지 아닌지 확인하는 기능
+    public boolean checkSB(User user, Game game) {
+        List<Integer> game_answer = game.getGame_answer();
+        List<Integer> user_number = user.getUser_number();
+
+        for (int answer_index = 0; answer_index < SIZE; answer_index++) {
+            if (user_number.contains(game_answer.get(answer_index))) {
+                return true;
             }
         }
-        return number_sb;
+        return false;
+    }
+
+    // 볼, 스트라이크 횟수를 확인하는 기능
+    public void countSB(User user, Game game) {
+        List<Integer> game_answer = game.getGame_answer();
+        List<Integer> user_number = user.getUser_number();
+
+        for (int answer_index = 0; answer_index < SIZE; answer_index++) {
+            for (int user_index = 0; user_index < SIZE; user_index++) {
+                updateSB(game, game_answer, user_number, answer_index, user_index);
+            }
+        }
+    }
+
+    private void updateSB(Game game, List<Integer> game_answer, List<Integer> user_number, int answer_index, int user_index) {
+        if (game_answer.get(answer_index) == user_number.get(user_index)) {
+            if (answer_index == user_index) {
+                game.plusStrike_count();
+            }
+            else {
+                game.plusBall_count();
+            }
+        }
     }
 
     // 볼과 스트라이크의 결과에 따른 구문을 출력하는 기능
-    public String validationSB(List<Integer> number_sb) {
+    public String validationSB(Game game) {
         String validation_result = "";
 
-        if (number_sb.get(0) == SIZE) {
-            validation_result = OutputView.checkRestart(number_sb);
+        if (game.getStrike_count() == SIZE) {
+            OutputView.checkRestart();
+            validation_result = Console.readLine();
         } else { // 특이사항 없이 계속 게임이 진행되는 경우라서 반환값을 제외함.
-            OutputView.checkBallAndStrike(number_sb);
+            OutputView.checkBallAndStrike(game);
         }
         return validation_result;
     }
