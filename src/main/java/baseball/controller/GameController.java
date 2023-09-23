@@ -2,22 +2,21 @@ package baseball.controller;
 
 import baseball.model.Game;
 import baseball.model.User;
+import baseball.utils.Validation;
 import baseball.view.InputView;
 import baseball.view.OutputView;
 import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /*
  * Model을 어떻게 사용할 것인가..?
  * -> Model이라는 것은 곧 서버가 가지고 있는 데이터에 접근할때 이용되는 클래스이다..
  * 그렇다면 이 프로그램에서는 어느 부분이?
  * -> 1. 사용자가 입력하는 숫자 3자리   2. 컴퓨터가 생각하는 숫자 3자리  3. 볼과 스트라이크의 관리는 컴퓨터가 담당..!
- *
+ * 입력에 대한 Validation은?
+ * -> 1. 3자리인가? 2. 각자리 수마다 다 다른 숫자인가? 3.
  * */
 public class GameController {
 
@@ -27,6 +26,7 @@ public class GameController {
 
     Game game;
     User user = new User();
+    Validation validation =  new Validation();
 
     public void run() {
         OutputView.startGame(); // 게임 시작을 알리는 기능
@@ -35,9 +35,9 @@ public class GameController {
         game = new Game(makeGameAnswer(SIZE, START_NUMBER, END_NUMBER)); // 새로운 게임 생성(3자리를 만들면서)
 
         while (true) {
-            user.setUser_number(convertInput(InputView.inputNumber()));
+            user.setUser_number(validation.validationInput(convertInput(InputView.inputNumber())));
             updateSB(user, game);
-            String validation_result = validationSB(game);
+            String validation_result = gameResult(game);
 
             if (Objects.equals(validation_result, "2")) break;
             else if (Objects.equals(validation_result, "1")) {
@@ -92,19 +92,19 @@ public class GameController {
         }
     }
 
+    // 현재 Game에 볼과 스트라이크를 엡데이트 하는 기능
     private void updateSB(Game game, List<Integer> game_answer, List<Integer> user_number, int answer_index, int user_index) {
         if (game_answer.get(answer_index) == user_number.get(user_index)) {
             if (answer_index == user_index) {
                 game.plusStrike_count();
-            }
-            else {
+            } else {
                 game.plusBall_count();
             }
         }
     }
 
     // 볼과 스트라이크의 결과에 따른 구문을 출력하는 기능
-    public String validationSB(Game game) {
+    public String gameResult(Game game) {
         String validation_result = "";
 
         if (game.getStrike_count() == SIZE) {
@@ -127,6 +127,4 @@ public class GameController {
 
         return converted_user_number;
     }
-
-
 }
