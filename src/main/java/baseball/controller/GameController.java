@@ -3,7 +3,6 @@ package baseball.controller;
 import baseball.model.Game;
 import baseball.view.InputView;
 import baseball.view.OutputView;
-import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
 import java.util.ArrayList;
@@ -11,39 +10,48 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/*
+ * Model을 어떻게 사용할 것인가..?
+ * -> Model이라는 것은 곧 서버가 가지고 있는 데이터에 접근할때 이용되는 클래스이다..
+ * 그렇다면 이 프로그램에서는 어느 부분이?
+ * -> 1. 사용자가 입력하는 숫자 3자리   2. 컴퓨터가 생각하는 숫자 3자리  3. 볼과 스트라이크의 관리는 컴퓨터가 담당..!
+ *
+ * */
 public class GameController {
 
     final int SIZE = 3;
+    final int START_NUMBER = 1;
+    final int END_NUMBER = 9;
 
     public void run() {
         OutputView.startGame(); // 게임 시작을 알리는 기능
-        Game game = new Game(); // 게임 객체 하나 생성
-//        game.resetSB(); // 볼, 스트라이크 0으로 초기화
-        List<Integer> answer_score = selectAnswer(); // 정답 숫자 만들기
+//        List<Integer> answer_score = makeGameAnswer(SIZE, START_NUMBER, END_NUMBER); // 정답 숫자 만들기
+
+        Game game = new Game(makeGameAnswer(SIZE, START_NUMBER, END_NUMBER)); // 새로운 게임 생성(3자리를 만들면서)
 
         while (true) {
             String input_number = InputView.inputNumber();
-            List<Integer> number_sb = checkSB(input_number, answer_score);
+            List<Integer> number_sb = checkSB(input_number, game.getGame_answer());
             String validation_result = validationSB(number_sb);
 
             if (Objects.equals(validation_result, "2")) break;
-            else if(Objects.equals(validation_result, "1")) {
-                answer_score = selectAnswer();
+            else if (Objects.equals(validation_result, "1")) {
+                game = new Game(makeGameAnswer(SIZE, START_NUMBER, END_NUMBER)); // 새로운 게임 생성
             }
         }
     }
 
-    // 컴퓨터가 생각하는 숫자 3자리 무작위 선정 기능
-    public List<Integer> selectAnswer() {
-        List<Integer> computer = new ArrayList<>();
+    // 컴퓨터가 만든 숫자 3자리
+    public List<Integer> makeGameAnswer(int answer_size, int start, int end) {
+        List<Integer> game_answer = new ArrayList<>();
 
-        while (computer.size() < 3) {
-            int randomNumber = Randoms.pickNumberInRange(1, 9);
-            if (!computer.contains(randomNumber)) {
-                computer.add(randomNumber);
+        while (game_answer.size() < answer_size) {
+            int randomNumber = Randoms.pickNumberInRange(start, end);
+            if (!game_answer.contains(randomNumber)) {
+                game_answer.add(randomNumber);
             }
         }
-        return computer;
+        return game_answer;
     }
 
     // 볼과 스트라이크의 유무를 확인하는 기능
@@ -54,7 +62,7 @@ public class GameController {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 int input_num = Character.getNumericValue(input_number.charAt(j));
-                 number_sb = updateSB(computer_answer, number_sb, input_num, j, i);
+                number_sb = updateSB(computer_answer, number_sb, input_num, j, i);
             }
         }
         return number_sb;
@@ -83,5 +91,6 @@ public class GameController {
         }
         return validation_result;
     }
+
 
 }
