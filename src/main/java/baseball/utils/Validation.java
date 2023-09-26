@@ -6,8 +6,6 @@ import java.util.Set;
 
 public class Validation {
 
-
-
     public List<Integer> validationInput(List<Integer> input_number) {
 
         if (input_number.size() != 3) {
@@ -30,7 +28,6 @@ public class Validation {
             }
             uniqueNumbers.add(number);
         }
-
         return false; // 중복된 숫자가 없으면 false 반환
     }
 }

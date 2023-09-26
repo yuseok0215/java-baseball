@@ -4,7 +4,7 @@ import java.util.List;
 
 public class User {
 
-    List<Integer> user_number;
+    private List<Integer> user_number;
 
     public List<Integer> getUser_number() {
         return user_number;

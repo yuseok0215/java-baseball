@@ -12,8 +12,6 @@ public class InputView {
         System.out.println("숫자를 입력해주세요 : ");
         String input_number = Console.readLine();
 
-
-
         return input_number;
     }
 }

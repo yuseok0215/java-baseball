@@ -4,8 +4,8 @@ import java.util.List;
 
 
 public class Game {
-    int strike_count;
-    int ball_count;
+    private int strike_count;
+    private int ball_count;
     List<Integer> game_answer; // 컴퓨터가 정한 3자리 숫자
 
     public Game(List<Integer> game_answer) {
@@ -48,7 +48,4 @@ public class Game {
     public void setGame_answer(List<Integer> game_answer) {
         this.game_answer = game_answer;
     }
-
-
-
 }

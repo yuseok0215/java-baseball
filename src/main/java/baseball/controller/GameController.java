@@ -20,9 +20,9 @@ import java.util.*;
  * */
 public class GameController {
 
-    final int SIZE = 3;
-    final int START_NUMBER = 1;
-    final int END_NUMBER = 9;
+    private static final int SIZE = 3;
+    private static final int START_NUMBER = 1;
+    private static final int END_NUMBER = 9;
 
     Game game;
     User user = new User();
@@ -30,7 +30,6 @@ public class GameController {
 
     public void run() {
         OutputView.startGame(); // 게임 시작을 알리는 기능
-//        List<Integer> answer_score = makeGameAnswer(SIZE, START_NUMBER, END_NUMBER); // 정답 숫자 만들기
 
         game = new Game(makeGameAnswer(SIZE, START_NUMBER, END_NUMBER)); // 새로운 게임 생성(3자리를 만들면서)
 
