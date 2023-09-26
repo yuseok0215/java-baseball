@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 public class Validation {
+    private static final int INPUT_SIZE = 3;
 
     public List<Integer> validationInput(List<Integer> input_number) {
 
-        if (input_number.size() != 3) {
+        if (input_number.size() != INPUT_SIZE) {
             throw new IllegalArgumentException("입력한 숫자의 길이는 3이어야 합니다.");
         }
 
